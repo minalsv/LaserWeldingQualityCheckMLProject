@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from openpyxl import load_workbook
+import config as cfg
 
 '''
 Utilities has some generic helper functions which can be used in all the modules under this project.
@@ -20,6 +21,24 @@ def get_file_name(file_name):
         # Only remove the extension
         return os.path.splitext(file_name)[0]
 
+def get_label_list_using_its_ids(df,ids):
+    """
+    It uses the input id list to extract the "Status" info corresponding to those IDs.
+    This can be used as "y" labels.
+    :param df: The df from which the information needs to be extracted.
+    :type df: df
+    :param ids: list of IDs whose status needs to be extracted.
+    :type ids: list
+    :return: status/label list of int
+    :rtype: list
+    """
+    filtered_df = df[df[cfg.id_column].isin(ids)]
+
+    # Extract the 'Status' column values
+    labels = filtered_df['Status'].values
+
+    print(f"Length of the input Ids {len(ids)} vs returned Ids ${len(labels)}")
+    return labels
 
 def filter_list_item(item_list, item_to_filter):
     """

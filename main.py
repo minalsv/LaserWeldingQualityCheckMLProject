@@ -5,8 +5,48 @@ import DataPreparationHelperFunctions as dphf
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    modified_test_info_df, modified_train_validation_info_df = dphf.get_test_and_train_meta_data()
-    X,y,test_x,test_y = dphf.get_X_y_and_test_data_from_meta_data(modified_test_info_df, modified_train_validation_info_df)
+
+    # STEP 1 - get the data in the processable format
+    # Extract meta information about the actual data
+    test_info_df, train_validation_info_df = dphf.get_test_and_train_meta_data()
+    # Extract data and labels for train and test sets.
+    X,y,test_x,test_y = dphf.get_X_y_and_test_data_from_meta_data(test_info_df, train_validation_info_df) # do not change the input order
+
+    # STEP 2 - Apply other pre-processing techniques e.g. normalise/standardise etc.
+
+    # STEP 3  - Visualise
+
+    # STEP 4 - Do some adjustments if required based on the visualisation understanding
+
+    # Step 5 - Run a simple Keras model
+
+    # STEP 6 - Visualise the results
+
+    # Step 7 - See the result and experiment with it.
+
+    # Step 8 - compare STEP 5 and STEP 7 results.
+
+    # STEP 9 - Run keras lib based model - functional model
+
+    # STEP 10 - Visualise the results
+
+    # STEP 10 - Adjust the parameters and visualise the results
+
+    # STEP 11 - Compare results
+
+    # STEP 12 - Run keras subclassed model
+
+    # STEP 13 - Visualise the results
+
+    # STEP 14 - Adjust the parameters and visualise the results
+
+    # STEP 15 - Compare results
+
+    # STEP 16 - Compare all models and conclude
+
+    # End
+
+
     '''
     
         # Extract the columns from each file and then plot

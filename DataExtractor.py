@@ -20,6 +20,49 @@ class DataExtractor:
 
         self.source = source
 
+    def get_data_from_all_files_matching_id(self,search_keyword, columns_to_extract,ids, separator=';'):
+        """
+        It combines data which is extracted from all the csvs,
+        those are present under the source folder which is set in the __init__ function.
+
+        :return: data from all files combined in df for all given columns
+        :rtype: df data frame
+
+        **It is expected that all CSVs has exact same column names to be extracted, only NOT case-sensitive names.
+        :param search_keyword:
+        :type search_keyword:
+        :param columns_to_extract:
+        :type columns_to_extract:
+        :param ids:
+        :type ids:
+        :param separator:
+        :type separator:
+        :return:
+        :rtype:
+        """
+        if not os.path.isdir(self.source):
+            raise ValueError(f"The source path {self.source} is not a valid directory.")
+
+        id_list =  []
+        csv_files = []
+        df_list_return = []  # create an empty  list and push all the Xs to this list.
+
+
+        for id in ids:
+            # Get all id number's related csv files in the directory
+            csv_file =  os.path.join(self.source, str(id) + '.csv')
+            if not os.path.exists(csv_file):
+                print(f"File not found: {csv_file}")
+                continue  # Skip to the next file
+
+            df_from_file = self.extract_columns_from_csv(csv_file, search_keyword, columns_to_extract, separator=';')
+            if df_from_file is not None:
+                df_from_file.drop(columns = [search_keyword])
+                df_list_return.append(df_from_file)
+                id_list.append(id)
+
+        return df_list_return,id_list
+
     def get_data_from_all_files_under_source(self,search_keyword, columns_to_extract, separator=';'):
 
         """
