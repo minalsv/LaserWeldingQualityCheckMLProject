@@ -13,48 +13,17 @@ class DataPreProcessing:
         """
         self.df = dataframe
 
-    def random_interpolation_within_range(self,column_to_be_interpolated, reference_columns):
+
+    def get_processed_data(self):
         """
-        Interpolate missing values in the 'column_to_be_interpolated' column by selecting
-        a random value within the range of the nearest available data points.
-        This is done within groups defined by reference_columns.
+        Returns the processed data.
+        :return: processed data
+        :rtype: pandas df
         """
-        grouped = self.df.groupby(reference_columns) #grouping of values is done here so data gets interpolated within the group and then the range used for the interpolation is dependant on this group.
+        return self.df
 
 
-        def interpolate_with_random(group):
-            """
-            Interpolate the missing values with random numbers within the nearest neighbours value range.
-            NOTE: The function has been nested here to limit its usage to the outer function.
-
-            :param group:
-            :type group:
-            :return:
-            :rtype:
-            """
-            non_nan_indices = group.dropna().index
-            for idx in group.index:
-                if pd.isna(group.loc[idx]):
-                    prev_idx = non_nan_indices[non_nan_indices < idx].max() if len(
-                        non_nan_indices[non_nan_indices < idx]) > 0 else None
-                    next_idx = non_nan_indices[non_nan_indices > idx].min() if len(
-                        non_nan_indices[non_nan_indices > idx]) > 0 else None
-
-                    prev_value = group.loc[prev_idx] if prev_idx is not None else None
-                    next_value = group.loc[next_idx] if next_idx is not None else None
-
-                    if prev_value is not None and next_value is not None:
-                        group.loc[idx] = np.random.uniform(prev_value, next_value)
-                    elif prev_value is not None:
-                        group.loc[idx] = prev_value
-                    elif next_value is not None:
-                        group.loc[idx] = next_value
-            return group
-
-        self.df[column_to_be_interpolated] = grouped[column_to_be_interpolated].apply(interpolate_with_random)
-
-
-    def linearly_interpolate_column_values(self,column_to_be_interpolated, reference_columns):
+    def interpolate_missing_column_values(self,column_to_be_interpolated, reference_columns,interpolation_method='random'):
         """
 
         :param column_to_be_interpolated:
@@ -64,20 +33,51 @@ class DataPreProcessing:
         :return:
         :rtype:
         """
+        # Backup the original column order
+        original_columns = self.df.columns
+        print(self.df.columns)
+
+        # Group by function used to group(but also splits it into smaller df) the values based on the reference columns values
         grouped = self.df.groupby(reference_columns)
 
-        # Interpolate missing column_to_be_interpolated values within each group
-        self.df[column_to_be_interpolated] = grouped[column_to_be_interpolated].transform(
-            lambda group: group.interpolate(method = 'linear'))
+        # Apply random interpolation to each group, passing the column name as an argument
+        self.df = grouped.apply(
+            lambda group: self.interpolate_within_group(group, column_to_be_interpolated,interpolation_method)).reset_index(drop = True)
 
-        # Handle any remaining missing values with forward and backward fill
-        self.df[column_to_be_interpolated].fillna(method = 'ffill', inplace = True)  # Forward fill as a fallback
-        self.df[column_to_be_interpolated].fillna(method = 'bfill', inplace = True)  # Backward fill as a fallback
+        # Restore the original column order
+        self.df = self.df[original_columns]
 
-    def get_processed_data(self):
-        """
-        Returns the processed data.
-        :return: processed data
-        :rtype: pandas df
-        """
         return self.df
+
+    def interpolate_within_group(self, group, column_to_be_interpolated,interpolation_method='random'):
+        """
+
+        :param group: group created based on common values of the reference columns
+        :type group: DataFrameGroupBy object
+        :param column_to_be_interpolated:
+        :type column_to_be_interpolated:
+        :param interpolation_method:
+        :type interpolation_method:
+        :return:
+        :rtype:
+        """
+        # Get all non-missing from the column_to_be_interpolated
+        non_missing = group[column_to_be_interpolated].dropna()
+
+        # If there are no non-missing values, return the group as is
+        if non_missing.empty:
+            return group
+        if interpolation_method == 'random':
+            # Perform random interpolation within the range of non-missing values
+            min_value = non_missing.min()
+            max_value = non_missing.max()
+
+            group[column_to_be_interpolated] = group[column_to_be_interpolated].apply(
+                lambda x: np.random.uniform(min_value, max_value) if pd.isna(x) else x
+            )
+        elif interpolation_method == 'linear':
+            # Perform linear interpolation
+            group[column_to_be_interpolated] = group[column_to_be_interpolated].interpolate(method='linear')
+
+
+        return group

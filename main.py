@@ -1,18 +1,15 @@
 """
 This app extracts the data from the specified dataset, plots and present the statistics along with the training a model, verifying etc. for the quality check of welding.
 """
-import pandas as pd
-import os
-import DataExtractor as de
-import DataPlotter as dp
-import utilities as ut
-import config as cfg
+import DataPreparationHelperFunctions as dphf
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-
-
-    # Extract the columns from each file and then plot
+    modified_test_info_df, modified_train_validation_info_df = dphf.get_test_and_train_meta_data()
+    X,y,test_x,test_y = dphf.get_X_y_and_test_data_from_meta_data(modified_test_info_df, modified_train_validation_info_df)
+    '''
+    
+        # Extract the columns from each file and then plot
     data_extractor = de.DataExtractor(cfg.dataset_folder)
     #extracted_data = data_extractor.extract_columns_from_csv(file_name, search_keyword, columns_to_extract)
     extracted_data_list,id_list = data_extractor.get_data_from_all_files_under_source( cfg.search_keyword, cfg.columns_to_extract)
@@ -23,12 +20,7 @@ if __name__ == '__main__':
 
     X = combined_df.values # get X
     print(X)
-    # first of all, prepare data by extrapolation and other techniques and then get Ys for all the IDs which are extracted above
-    # we need to consider only those Ys for which we have data.
-
-    y_df = ut.read_excel_to_df(cfg.label_file_path, cfg.input_label_sheet)
-    print(y_df)
-    '''
+    
     #y = extract_labels()
     # Create an instance of DataPlotter with the extracted data and a selected color palette
     plotter = dp.DataPlotter(extracted_data, palette_name = 'coolwarm')
