@@ -97,3 +97,78 @@ class DataPlotter:
         # Show the plot
         plt.show()
 
+    def plot_feature_with_stats(self,x_df,df_name):
+        """
+        Plots the linear graphs for all the columns of the input data with their mean and median.
+
+        :param x_df:
+        :type x_df:
+        :param df_name:
+        :type df_name:
+        """
+        for i, column in enumerate(x_df.columns):
+            plt.figure(figsize = (10, 5))
+
+            # Plot the feature with a unique color
+            plt.plot(x_df[column], label = column, color = self.palette[i % len(self.palette)])
+
+            # Calculate mean and median
+            mean_val = x_df[column].mean()
+            median_val = x_df[column].median()
+
+            median_color = 'green'
+            mean_color = 'red'
+            # Plot mean and median as horizontal lines
+            plt.axhline(mean_val, color = mean_color, linestyle = '--', label = f'Mean: {mean_val:.2f}')
+            plt.axhline(median_val, color = median_color, linestyle = '--', label = f'Median: {median_val:.2f}')
+
+            # Annotate mean and median
+            plt.text(len(x_df) - 1, mean_val, f'Mean: {mean_val:.2f}', color = mean_color, verticalalignment = 'center')
+            plt.text(len(x_df) - 1, median_val, f'Median: {median_val:.2f}', color = median_color,
+                     verticalalignment = 'center')
+
+            # Title and labels
+            plt.title(f'Feature: {column} for {df_name}')
+            plt.xlabel('Index')
+            plt.ylabel('Value')
+            plt.legend()
+            plt.show()
+
+
+    def plot_all_features_with_stats_in_one_graph(self,df,df_name):
+
+
+        # Number of columns (features) in the DataFrame
+        num_columns = len(df.columns)
+
+        # Create subplots, one for each feature
+        fig, axes = plt.subplots(nrows = 1, ncols = num_columns, figsize = (4 * num_columns, 5), sharey = True)
+
+        # Define a list of colors to cycle through for the features
+        colors = self.palette
+
+        # Plot each feature in a separate subplot
+        for i, (column, ax) in enumerate(zip(df.columns, axes)):
+            # Plot the feature with a unique color
+            ax.plot(df[column], label = column, color = colors[i % len(colors)])
+
+            # Calculate mean and median
+            mean_val = df[column].mean()
+            median_val = df[column].median()
+
+            # Plot mean and median as horizontal lines
+            ax.axhline(mean_val, color = 'red', linestyle = '--', label = f'Mean: {mean_val:.2f}')
+            ax.axhline(median_val, color = 'green', linestyle = '--', label = f'Median: {median_val:.2f}')
+
+            # Annotate mean and median
+            ax.text(len(df) - 1, mean_val, f'Mean: {mean_val:.2f}', color = 'red', verticalalignment = 'center', fontsize = 8)
+            ax.text(len(df) - 1, median_val, f'Median: {median_val:.2f}', color = 'green', verticalalignment = 'center',
+                    fontsize = 8)
+
+            # Title and legend for each subplot
+            ax.set_title(f'Feature: {column} for {df_name}')
+            ax.legend()
+
+        # Adjust layout
+        plt.tight_layout()
+        plt.show()

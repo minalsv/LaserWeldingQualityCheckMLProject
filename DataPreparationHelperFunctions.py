@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 import DataExtractor as de
-import DataPlotter as dp
 import utilities as ut
 import config as cfg
 from DataPreProcessing import DataPreProcessing
@@ -12,10 +11,10 @@ def get_test_and_train_meta_data():
     Also, it gives info about which readings were actual by test and which are interpolated.
     Use interpolated readings for train/validation and actual readings for test purpose.
     But the number of test readings are going beyond 20% so moving few data points taken in actual tension test to the train/validation.
-    This moving of data points is still happeneing at meta level and not the actual CSV data.
-    Once the meta data is ready then we could use that to build the real test, train Xs and "y" labels.
+    This moving of data points is still happening at meta level and not the actual CSV data.
+    Once the metadata is ready then we could use that to build the real test, train Xs and "y" labels.
 
-    :return: Returns meta data for test and train
+    :return: Returns metadata for test and train
     :rtype: df,df
     """
     # first of all, prepare data by extrapolation and other techniques and then get Ys for all the IDs which are extracted above
@@ -35,7 +34,7 @@ def get_test_and_train_meta_data():
     ut.write_to_excel(interpolated_df, cfg.label_file_path, cfg.output_label_sheet)
 
     print("Get the test meta data")
-    # Extract the data whch can be later used for the test purpose, remaining data can be used for training and validation
+    # Extract the data which can be later used for the test purpose, remaining data can be used for training and validation
     test_info_df = interpolated_df[interpolated_df[cfg.column_name_which_decides_values_testing].notnull()]
     print(test_info_df.columns)
     print(test_info_df.info())
@@ -46,7 +45,7 @@ def get_test_and_train_meta_data():
     print(train_validation_df.info())
 
     print(
-        f"Legnth of the test df {len(test_info_df)} + length of the train/validation info df {len(train_validation_df)} "
+        f"Length of the test df {len(test_info_df)} + length of the train/validation info df {len(train_validation_df)} "
         f"is {len(test_info_df) + len(train_validation_df)} which is equal to the original info df i.e. {len(interpolated_df)}")
 
     modified_test_info_df, modified_train_validation_info_df = ut.transfer_excess_test_data(cfg.transfer_head_counts,
@@ -54,7 +53,7 @@ def get_test_and_train_meta_data():
                                                                                             test_info_df,
                                                                                             train_validation_df)
     print(
-        f"Legnth of the modified test df {len(modified_test_info_df)} + length of the train/validation info df {len(modified_train_validation_info_df)} "
+        f"Length of the modified test df {len(modified_test_info_df)} + length of the train/validation info df {len(modified_train_validation_info_df)} "
         f"is {len(modified_test_info_df) + len(modified_train_validation_info_df)} which is equal to the original info df i.e. {len(interpolated_df)}")
 
     return modified_test_info_df, modified_train_validation_info_df

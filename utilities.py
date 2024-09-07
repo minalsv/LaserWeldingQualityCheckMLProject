@@ -2,7 +2,8 @@ import os
 import pandas as pd
 from openpyxl import load_workbook
 import config as cfg
-
+import DataPlotter as dp
+from DataPreProcessing import DataPreProcessing
 '''
 Utilities has some generic helper functions which can be used in all the modules under this project.
 '''
@@ -160,3 +161,22 @@ def transfer_excess_test_data(transfer_head_counts, transfer_tail_counts, test_i
 
     return test_info_df,combined_df
 
+def plot_both_classes_input_data(X,y):
+    plotter = dp.DataPlotter(X, palette_name = 'deep')
+
+    for i,value in enumerate(y):
+        if value == 1:
+            data_pre_processor = DataPreProcessing(X[i])
+            dp_X = data_pre_processor.apply_min_max_scaler()
+            print(f"OK found first at the index {i}")
+            plotter.plot_all_features_with_stats_in_one_graph(dp_X, 'OK result')
+            break
+
+    for i,value in enumerate(y):
+        if value == 0:
+            print(f"NOT OK found first at the index {i}")
+            data_pre_processor = DataPreProcessing(X[i])
+            dp_X = data_pre_processor.apply_min_max_scaler()
+            plotter.plot_all_features_with_stats_in_one_graph(dp_X, 'NOT OK result')
+            #plotter.plot_feature_with_stats(X[i],'When NOT OK result')
+            break

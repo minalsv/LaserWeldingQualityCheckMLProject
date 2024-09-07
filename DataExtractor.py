@@ -57,7 +57,7 @@ class DataExtractor:
 
             df_from_file = self.extract_columns_from_csv(csv_file, search_keyword, columns_to_extract, separator=';')
             if df_from_file is not None:
-                df_from_file.drop(columns = [search_keyword])
+                df_from_file = df_from_file.drop(columns = [search_keyword])
                 df_list_return.append(df_from_file)
                 id_list.append(id)
 

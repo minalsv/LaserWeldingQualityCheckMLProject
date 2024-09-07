@@ -2,6 +2,7 @@
 This app extracts the data from the specified dataset, plots and present the statistics along with the training a model, verifying etc. for the quality check of welding.
 """
 import DataPreparationHelperFunctions as dphf
+import utilities as ut
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -11,10 +12,17 @@ if __name__ == '__main__':
     test_info_df, train_validation_info_df = dphf.get_test_and_train_meta_data()
     # Extract data and labels for train and test sets.
     X,y,test_x,test_y = dphf.get_X_y_and_test_data_from_meta_data(test_info_df, train_validation_info_df) # do not change the input order
+    print(X)
 
     # STEP 2 - Apply other pre-processing techniques e.g. normalise/standardise etc.
 
     # STEP 3  - Visualise
+
+    # Plotting x data for two instances just for visual comparison, OK and NOT OK results
+    ut.plot_both_classes_input_data(X,y)
+
+
+
 
     # STEP 4 - Do some adjustments if required based on the visualisation understanding
 

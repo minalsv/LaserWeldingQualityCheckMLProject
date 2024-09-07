@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
 
 class DataPreProcessing:
     """
@@ -81,3 +82,36 @@ class DataPreProcessing:
 
 
         return group
+
+    def apply_min_max_scaler(self):
+        """
+        Apply min-max scaler to the dataframe.
+        :return: Normalised data
+        :rtype: df
+        """
+        # Min-Max Normalization
+        min_max_scaler = MinMaxScaler()
+        data_normalized = pd.DataFrame(min_max_scaler.fit_transform(self.df), columns=self.df.columns)
+        return data_normalized
+
+    def apply_z_score(self):
+        """
+        Applies Z-score normalisation on the data.
+        :return: Z scored normalised data
+        :rtype: df
+        """
+        # Z-Score Normalization (Standardization)
+        standard_scaler = StandardScaler()
+        data_standardized = pd.DataFrame(standard_scaler.fit_transform(self.df), columns=self.df.columns)
+        return data_standardized
+
+    def apply_robust_scaling(self):
+        """
+        Apply Robust scaling on the data.
+        :return: Scaled data.
+        :rtype: df
+        """
+        # Robust Scaling
+        robust_scaler = RobustScaler()
+        data_robust_scaled = pd.DataFrame(robust_scaler.fit_transform(self.df), columns=self.df.columns)
+        return data_robust_scaled
