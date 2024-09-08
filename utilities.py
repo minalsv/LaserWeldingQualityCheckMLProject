@@ -169,7 +169,7 @@ def plot_both_classes_input_data(X,y):
     for i,value in enumerate(y):
         if value == 1:
             data_pre_processor = DataPreProcessing(X[i])
-            dp_X = data_pre_processor.apply_min_max_scaler()
+            dp_X = data_pre_processor.apply_min_max_scaler(X[i])
             print(f"OK found first at the index {i}")
             plotter.plot_all_features_with_stats_in_one_graph(dp_X, 'OK result')
             break
@@ -178,12 +178,12 @@ def plot_both_classes_input_data(X,y):
         if value == 0:
             print(f"NOT OK found first at the index {i}")
             data_pre_processor = DataPreProcessing(X[i])
-            dp_X = data_pre_processor.apply_min_max_scaler()
+            dp_X = data_pre_processor.apply_min_max_scaler(X[i])
             plotter.plot_all_features_with_stats_in_one_graph(dp_X, 'NOT OK result')
             #plotter.plot_feature_with_stats(X[i],'When NOT OK result')
             break
             
-def plot_histories(histories):
+def plot_histories(histories,title):
     """
     Plot the histories returned by the trained model to visualise it's performance over the whole training.
     It may give insight about overfitting etc.
@@ -193,8 +193,19 @@ def plot_histories(histories):
     for i, history in enumerate(histories):
         plt.plot(history.history['loss'], label=f'Train Fold {i+1}')
         plt.plot(history.history['val_loss'], label=f'Validation Fold {i+1}')
-    plt.title('Training and Validation Loss across Folds')
+    plt.title('Training and Validation Loss across Folds for'+ title)
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
     plt.show()
+    
+def plot_confusion_matrix(test_y_array, y_pred):
+    # Confusion Matrix
+    cm = confusion_matrix(test_y_array, y_pred)
+    sns.heatmap(cm, annot=True, fmt='d')
+    plt.title('Confusion Matrix')
+    plt.xlabel('Predicted')
+    plt.ylabel('True')
+    plt.show()
+    
+    

@@ -83,7 +83,13 @@ class DataPreProcessing:
 
         return group
 
-    def apply_min_max_scaler(self):
+    def normalize_list_of_dfs(self,X):
+        # Apply normalization to each DataFrame in the list
+        normalized_X = [self.apply_min_max_scaler(df) for df in X]
+    
+        return normalized_X
+
+    def apply_min_max_scaler(self,df):
         """
         Apply min-max scaler to the dataframe.
         :return: Normalised data
@@ -91,7 +97,7 @@ class DataPreProcessing:
         """
         # Min-Max Normalization
         min_max_scaler = MinMaxScaler()
-        data_normalized = pd.DataFrame(min_max_scaler.fit_transform(self.df), columns=self.df.columns)
+        data_normalized = pd.DataFrame(min_max_scaler.fit_transform(df), columns=df.columns)
         return data_normalized
 
     def apply_z_score(self):
