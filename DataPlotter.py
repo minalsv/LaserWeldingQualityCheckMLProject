@@ -97,14 +97,40 @@ class DataPlotter:
         # Show the plot
         plt.show()
 
+    def plot_histogram_for_all_input_features(self, df, features_to_be_plotted, graph_title, bins=15):
+        """
+
+        :param bins:
+        :type bins:
+        :param features_to_be_plotted:
+        :type features_to_be_plotted:
+        :param df:
+        :type df:
+        :param graph_title:
+        :type graph_title:
+        :return:
+        :rtype:
+        """
+        # Plot histograms for each feature in the combined dataset
+        fig, axs = plt.subplots(1, len(features_to_be_plotted), figsize = (15, 5))
+
+
+        for i in range(len(features_to_be_plotted)):
+            axs[i].hist(df[:2000, features_to_be_plotted[i]], bins = 50, alpha = 0.7, color = 'blue')
+            axs[i].set_title(f'Histogram of {features_to_be_plotted[i]}')
+            axs[i].set_xlabel('Value')
+            axs[i].set_ylabel('Frequency')
+
+        plt.tight_layout()
+        plt.show()
+
     def plot_feature_with_stats(self,x_df,df_name):
         """
-        Plots the linear graphs for all the columns of the input data with their mean and median.
-
-        :param x_df:
-        :type x_df:
-        :param df_name:
-        :type df_name:
+        Plots the linear graphs for all the columns of the input data with their mean and median but in a separate graph.
+        :param x_df: input data
+        :type x_df: df
+        :param df_name: Name for the graph
+        :type df_name:basestring
         """
         for i, column in enumerate(x_df.columns):
             plt.figure(figsize = (10, 5))
@@ -136,7 +162,13 @@ class DataPlotter:
 
 
     def plot_all_features_with_stats_in_one_graph(self,df,df_name):
-
+        """
+        Plot data(all features) from the input dataframe in one graph.
+        :param df: data to be plotted
+        :type df: df
+        :param df_name: Name to be given for the graph
+        :type df_name: basestring
+        """
 
         # Number of columns (features) in the DataFrame
         num_columns = len(df.columns)

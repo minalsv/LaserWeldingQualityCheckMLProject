@@ -3,6 +3,10 @@ This app extracts the data from the specified dataset, plots and present the sta
 """
 import DataPreparationHelperFunctions as dphf
 import utilities as ut
+from DataPlotter import DataPlotter
+from DataPreProcessing import DataPreProcessing
+import config as cfg
+import pandas as pd
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -13,21 +17,29 @@ if __name__ == '__main__':
     # Extract data and labels for train and test sets.
     X,y,test_x,test_y = dphf.get_X_y_and_test_data_from_meta_data(test_info_df, train_validation_info_df) # do not change the input order
     print(X)
+    combined_df = pd.concat(X, ignore_index = True)
 
     # STEP 2 - Apply other pre-processing techniques e.g. normalise/standardise etc.
-
+    data_pre_processor = DataPreProcessing(combined_df)
+    dp_X = data_pre_processor.apply_min_max_scaler()
     # STEP 3  - Visualise
 
     # Plotting x data for two instances just for visual comparison, OK and NOT OK results
-    ut.plot_both_classes_input_data(X,y)
+    ut.plot_both_classes_input_data(X,y) # min-max scaler is done inside this function before plotting so not passing normalised data.
+
+    # histogram
+    #plotter = DataPlotter(combined_df)
+    #plotter.plot_data(graph_type = 'histogram', x_col = cfg.features,
+                      #bins=15)
+    #data_plotter.plot_histogram_for_all_input_features(combined_df, cfg.features, 'Test', bins=15)
 
 
-
-
-    # STEP 4 - Do some adjustments if required based on the visualisation understanding
-
+    # STEP 4 - Split the data in train/test
+    X_train, X_val, y_train, y_val = dphf.train_test_data(X, y )
+    print(X_train, X_val, y_train, y_val)
     # Step 5 - Run a simple Keras model
-
+    #import models as mdl
+    #sequential_model = mdl.create_model(input_shape=(X_fold_train.shape[1], X_fold_train.shape[2]))
     # STEP 6 - Visualise the results
 
     # Step 7 - See the result and experiment with it.

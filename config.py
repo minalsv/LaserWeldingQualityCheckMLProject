@@ -7,6 +7,7 @@ label_file_path = os.path.join(current_dir, 'dataset/Versuchsliste.xlsx')
 index_column = 'Index'
 search_keyword = index_column  # meta data ends here
 columns_to_extract = ['P-Raw', 'T-Raw', 'R-Raw', 'L-Raw', index_column]  # Replace with your column names or indices
+features = ['P-Raw', 'T-Raw', 'R-Raw', 'L-Raw']
 
 #all columns from the modified sheet
 all_columns = ['ID (Unnamed: 0_level_1)', 'Position außen [µOhm] (Unnamed: 1_level_1)',

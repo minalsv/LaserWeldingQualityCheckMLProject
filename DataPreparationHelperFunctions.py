@@ -4,6 +4,9 @@ import DataExtractor as de
 import utilities as ut
 import config as cfg
 from DataPreProcessing import DataPreProcessing
+import numpy as np
+from sklearn.model_selection import train_test_split, KFold
+from sklearn.preprocessing import StandardScaler
 
 def get_test_and_train_meta_data():
     """
@@ -96,3 +99,30 @@ def get_X_y_and_test_data_from_meta_data(test_meta_info_df, train_validation_met
     print(f"y Labels {len(y)}:\n ${y}")
 
     return X,y,test_X,test_y
+
+
+def train_test_data(X,y,test_size= 0.2):
+    """
+    Divides the X and y into train and test using the provided split percentage and then normalises the data using the Standard scaler method.
+    :param X: X data list
+    :type X:  list of dfs
+    :param y: labels
+    :type y: list of booleans
+    :param test_size: test data split e.g. 0.2 means 20% in the splitting.
+    :type test_size: float
+    :return: X_train,X_val, y_train, y_val
+    :rtype: list of dfs, list of dfs, list of boolean, list of booleans
+    """
+    # Convert X (list of DataFrames) to a 3D NumPy array
+    X_array = np.array([df.to_numpy() for df in X])  # Shape: (168, 20000, num_features)
+    y_array = np.array(y)  # Shape: (168,)
+
+    # Split the data into training and validation sets (80% train, 20% validation)
+    X_train, X_val, y_train, y_val = train_test_split(X_array, y_array, test_size=0.2, random_state=42)
+
+    # Normalize the data (you can also apply normalization inside the KFold loop for each fold)
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train.reshape(-1, X_train.shape[-1])).reshape(X_train.shape)
+    X_val = scaler.transform(X_val.reshape(-1, X_val.shape[-1])).reshape(X_val.shape)
+
+    return X_train, X_val, y_train, y_val
