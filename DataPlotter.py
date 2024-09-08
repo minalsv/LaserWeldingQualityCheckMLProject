@@ -2,7 +2,8 @@
 The data plotter allows to plot the data by setting various color palettes and type of graphs.
 """
 import matplotlib
-matplotlib.use('TkAgg')  # Choose an interactive backend
+#matplotlib.use('TkAgg')  # Choose an interactive backend
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import seaborn as sns

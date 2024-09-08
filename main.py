@@ -40,6 +40,8 @@ if __name__ == '__main__':
     # Step 5 - Run a simple Keras model
     #import models as mdl
     #sequential_model = mdl.create_model(input_shape=(X_fold_train.shape[1], X_fold_train.shape[2]))
+    sequential_model = mdl.apply_k_fold_on_model(X_train,y_train,n_splits=5, epochs=20, batch_size=32, random_state=42)
+        
     # STEP 6 - Visualise the results
 
     # Step 7 - See the result and experiment with it.

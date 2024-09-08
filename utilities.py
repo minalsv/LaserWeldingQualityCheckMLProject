@@ -4,6 +4,8 @@ from openpyxl import load_workbook
 import config as cfg
 import DataPlotter as dp
 from DataPreProcessing import DataPreProcessing
+import matplotlib.pyplot as plt
+
 '''
 Utilities has some generic helper functions which can be used in all the modules under this project.
 '''
@@ -180,3 +182,19 @@ def plot_both_classes_input_data(X,y):
             plotter.plot_all_features_with_stats_in_one_graph(dp_X, 'NOT OK result')
             #plotter.plot_feature_with_stats(X[i],'When NOT OK result')
             break
+            
+def plot_histories(histories):
+    """
+    Plot the histories returned by the trained model to visualise it's performance over the whole training.
+    It may give insight about overfitting etc.
+    :param histories: contains information about the various metrics captured during the training.
+    :type histories: dict 
+    """
+    for i, history in enumerate(histories):
+        plt.plot(history.history['loss'], label=f'Train Fold {i+1}')
+        plt.plot(history.history['val_loss'], label=f'Validation Fold {i+1}')
+    plt.title('Training and Validation Loss across Folds')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()

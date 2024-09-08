@@ -1,7 +1,5 @@
-openpyxl~=3.1.5
-sklearn
-pandas~=2.2.2
-matplotlib~=3.9.2
-seaborn~=0.13.2
-numpy~=2.0.2
-scikit-learn~=1.5.1
+openpyxl
+pandas
+matplotlib
+seaborn
+scikit-learn
